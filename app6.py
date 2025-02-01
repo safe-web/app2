@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import sympify, lambdify, Eq, solve, symbols
 
-st.title("Calculator Experiment 1")
+st.title("Advanced calcuulator")
 
 mode = st.radio("mode:", ("calculate", "mapping", "solve equation"))
 
