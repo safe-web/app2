@@ -127,7 +127,7 @@ elif mode == "solve equation":
     if 'equation_history' in st.session_state:
         if st.session_state.equation_history:
             st.write("History:")
-            for expr, rel in reversed st.session_state.equation_history:
+            for expr, rel in st.session_state.equation_history:
                 st.write(expr,rel)
         else:
             st.write("No history.")
