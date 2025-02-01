@@ -6,7 +6,7 @@ from sympy import sympify, lambdify, Eq, solve, symbols
 
 st.title("Calculator Experiment 1")
 
-mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
+mode = st.radio("mode:", ("calculate", "mapping", "solve equation"))
 
 if mode == "calculate":
     st.write("Please enter your expression")
@@ -66,7 +66,7 @@ elif mode == "mapping":
     x_min = st.number_input("Minimum：", value=-10.0)
     x_max = st.number_input("Maximum：", value=10.0)
     
-    if st.button("plot"):
+    if st.button("map"):
         try:
             
             if x_min >= x_max:
@@ -99,7 +99,7 @@ elif mode == "mapping":
             for item in reversed(st.session_state.mapping_history):
                 st.code(expression)
         else:
-        st.write("No history"）
+        st.write("No history")
     else:
         st.write("No history")
 elif mode == "solve equation":
