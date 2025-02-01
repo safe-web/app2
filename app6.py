@@ -99,7 +99,7 @@ elif mode == "mapping":
             for item in reversed(st.session_state.mapping_history):
                 st.code(expression)
         else:
-        st.write("No history")
+            st.write("No history")
     else:
         st.write("No history")
 elif mode == "solve equation":
