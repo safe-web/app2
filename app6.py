@@ -5,7 +5,7 @@ import numpy as np
 from sympy import sympify, lambdify, Eq, solve, symbols
 
 st.title("Advanced calcuulator")
-st.subtitle("SCIE")
+st.write("Jeremy - 24034 Tony-24326 Ben-24250 David-24077")
 
 mode = st.radio("mode:", ("calculate", "mapping", "solve equation"))
 
