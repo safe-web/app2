@@ -52,7 +52,7 @@ if mode == "calculate":
     if 'calculator_history' in st.session_state:
         if st.session_state.calculator_history:
             st.write("History:")
-            for expr, res in reversed st.session_state.calculator_history:
+            for expr, res in st.session_state.calculator_history:
                 st.write(expr, "=", res)
         else:
                 st.write("No history.")
