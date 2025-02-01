@@ -52,24 +52,27 @@ if mode == "calculate":
     if 'calculator_history' in st.session_state:
         if st.session_state.calculator_history:
             st.write("History:")
-            for expr, res in st.session_state.calculator_history:
+            for expr, res in reversed st.session_state.calculator_history:
                 st.write(expr, "=", res)
         else:
                 st.write("No history.")
     else:
             st.write("No history")
-
-
-
-elif mode == "plot":
+        
+elif mode == "mapping":
     st.write("Please enter your expression")
     expression = st.text_input("Expression:")
-
+    
+    x_min = st.number_input("Minimum：", value=-10.0)
+    x_max = st.number_input("Maximum：", value=10.0)
+    
     if st.button("plot"):
         try:
+            
+            if x_min >= x_max:
+                raise ValueError("Maximum must be greater than Minimum")
+                
             func_expr = sympify(expression)
-            x_min = float(st.number_input("Minimum：", value=-10.0))
-            x_max = float(st.number_input("Maximum：", value=10.0))
             x = np.linspace(x_min, x_max, 1000)
 
             func = lambdify('x', func_expr, 'numpy')
@@ -79,27 +82,26 @@ elif mode == "plot":
             plt.plot(x, y)
             plt.xlabel('x')
             plt.ylabel('y')
-            plt.title('Graph of the function')
+            plt.title(f'Graph of {expression}')
             plt.grid(True)
-            st.pyplot(plt)
+            st.pyplot(plt.gcf())
+            
             if "mapping_history" not in st.session_state:
                 st.session_state.mapping_history = []
-                st.session_state.mapping_history.append(expression)
+            st.session_state.mapping_history.append(expressiion)      
+            
         except Exception as e:
-            st.write("Error:", e)
+            st.error(f"Error: {str(e)}")
 
+    st.write("History")
     if 'mapping_history' in st.session_state:
         if st.session_state.mapping_history:
-            st.write("History:")
-            for items in st.session_state.mapping_history:
-                st.write(items)
+            for item in reversed(st.session_state.mapping_history):
+                st.code(expression)
         else:
-            st.write("No history.")
+        st.write("No history"）
     else:
-        st.write("No history.")
-
-        
-
+        st.write("No history")
 elif mode == "solve equation":
     st.write("enter equation（e.g ：x^2 - 4 = 0）")
     equation_input = st.text_input("Equation:")
@@ -117,7 +119,7 @@ elif mode == "solve equation":
 
             for i in range(0,len(solutions)):
                 st.write("x",i+1, solutions[i])
-                st.session_state.equation_history.append((equation_input,solutions[i]))
+            st.session_state.equation_history.append((equation_input,solutions[i]))
         
 
         except Exception as e:
@@ -125,7 +127,7 @@ elif mode == "solve equation":
     if 'equation_history' in st.session_state:
         if st.session_state.equation_history:
             st.write("History:")
-            for expr, rel in st.session_state.equation_history:
+            for expr, rel in reversed st.session_state.equation_history:
                 st.write(expr,rel)
         else:
             st.write("No history.")
