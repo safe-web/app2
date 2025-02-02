@@ -21,7 +21,8 @@ if not st.session_state.logged_in:
     st.stop()
 
 # 主程序
-st.title("Calculator Experiment 1")
+st.title("The math helper")
+st.write("Jeremy - 24034 Tony-24326 Ben-24250 David-24077")
 
 # 添加注销按钮
 if st.button("Logout"):
