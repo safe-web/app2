@@ -16,7 +16,6 @@ if not st.session_state.logged_in:
         # 简单验证（生产环境请使用安全验证方式）
         if username == "admin" and password == "123":
             st.session_state.logged_in = True
-            st.experimental_rerun()
         else:
             st.error("Invalid username or password")
     st.stop()
@@ -27,7 +26,6 @@ st.title("Calculator Experiment 1")
 # 添加注销按钮
 if st.button("Logout"):
     st.session_state.logged_in = False
-    st.experimental_rerun()
 
 mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
 
