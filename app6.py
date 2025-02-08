@@ -58,6 +58,7 @@ if mode == "calculate":
             expression = expression.replace('@', 'math.log')
             expression = expression.replace('sqrt', 'math.sqrt')
             expression = expression.replace('#', 'math.sqrt')
+            expression = expression.replace('^', '**')
 
             result = eval(expression)
             st.write("Result:", result)
