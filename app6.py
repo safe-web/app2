@@ -51,13 +51,12 @@ if mode == "calculate":
                 expression = expression.replace('cos', 'math.cos')
                 expression = expression.replace('tan', 'math.tan')
 
-            expression = expression.replace("'", "/180*math.pi")
+            expression = expression.replace("'", "/180*pi")
             expression = expression.replace('pi', 'math.pi')
             expression = expression.replace('e', 'math.e')
             expression = expression.replace('log', 'math.log')
             expression = expression.replace('@', 'math.log')
             expression = expression.replace('#', 'math.sqrt')
-            expression = expression.replace('^', "**")
 
             result = eval(expression)
             st.write("Result:", result)
