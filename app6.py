@@ -14,7 +14,7 @@ if not st.session_state.logged_in:
     if st.button("Login"):
         if username == "admin" and password == "123":
             st.session_state.logged_in = True
-        elif:
+        elif
             username == "Jeremy" and password == "24034":
             st.session_state.logged_in = True
         elif:
