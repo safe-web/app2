@@ -36,7 +36,7 @@ mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
 
 if mode == "calculate":
     st.write("Please enter your expression")
-    st.write("@ for log, ^ for **, # for sqrt, pi = 3.14……, e = 2.718……")
+    st.write("@() for log(), ^ / ** for square, #() for sqrt(), pi = 3.14……, e = 2.718……")
     expression = st.text_input("Expression:")
     arc = st.radio("'arc'mode", ('off', 'on'))
 
