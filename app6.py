@@ -14,17 +14,13 @@ if not st.session_state.logged_in:
     if st.button("Login"):
         if username == "admin" and password == "123":
             st.session_state.logged_in = True
-        elif:
-            username == "Jeremy" and password == "24034":
+        elif username == "Jeremy" and password == "24034":
             st.session_state.logged_in = True
-        elif:
-            username == "David" and password == "24077":
+        elif username == "David" and password == "24077":
             st.session_state.logged_in = True
-        elif:
-            username == "Tony" and password == "24326":
+        elif username == "Tony" and password == "24326":
             st.session_state.logged_in = True
-        elif:
-            username == "Ben" and password == "24250":
+        elif username == "Ben" and password == "24250":
             st.session_state.logged_in = True
         else:
             st.error("Invalid username or password")
