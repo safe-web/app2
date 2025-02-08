@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import sympify, lambdify, Eq, solve, symbols
 
-# 登录验证
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
@@ -13,18 +12,27 @@ if not st.session_state.logged_in:
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     if st.button("Login"):
-        # 简单验证（生产环境请使用安全验证方式）
         if username == "admin" and password == "123":
+            st.session_state.logged_in = True
+        elif:
+            username == "Jeremy" and password == "24034":
+            st.session_state.logged_in = True
+        elif:
+            username == "David" and password == "24077":
+            st.session_state.logged_in = True
+        elif:
+            username == "Tony" and password == "24326":
+            st.session_state.logged_in = True
+        elif:
+            username == "Ben" and password == "24250":
             st.session_state.logged_in = True
         else:
             st.error("Invalid username or password")
     st.stop()
 
-# 主程序
 st.title("The math helper")
 st.write("Jeremy - 24034 Tony-24326 Ben-24250 David-24077")
 
-# 添加注销按钮
 if st.button("Logout"):
     st.session_state.logged_in = False
 
