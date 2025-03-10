@@ -100,8 +100,8 @@ elif mode == "plot":
     st.write("Please enter your expression")
     expression = st.text_input("Expression:")
     
-    x_min = st.number_input("Minimum：", value=-10.0)
-    x_max = st.number_input("Maximum：", value=10.0)
+    x_min = st.number_input("Minimum：")
+    x_max = st.number_input("Maximum：")
     
     if st.button("Plot"):
         try:
