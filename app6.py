@@ -34,6 +34,24 @@ if st.button("Logout"):
 
 mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
 
+def Graph_Plotting():
+        if x_min >= x_max:
+            raise ValueError("Maximum must be greater than Minimum")
+                
+        func_expr = sympify(expression)
+        x = np.linspace(x_min, x_max, 1000)
+
+        func = lambdify('x', func_expr, 'numpy')
+        y = func(x)
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(x, y)
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('Graph of {expression}')
+        plt.grid(True)
+        st.pyplot(plt.gcf())
+
 if mode == "calculate":
     st.write("Please enter your expression")
     st.write("@() for log(), ^ / ** for square, #() for sqrt(), pi = 3.14……, e = 2.718……")
@@ -87,22 +105,7 @@ elif mode == "plot":
     
     if st.button("Plot"):
         try:
-            if x_min >= x_max:
-                raise ValueError("Maximum must be greater than Minimum")
-                
-            func_expr = sympify(expression)
-            x = np.linspace(x_min, x_max, 1000)
-
-            func = lambdify('x', func_expr, 'numpy')
-            y = func(x)
-
-            plt.figure(figsize=(10, 5))
-            plt.plot(x, y)
-            plt.xlabel('x')
-            plt.ylabel('y')
-            plt.title(f'Graph of {expression}')
-            plt.grid(True)
-            st.pyplot(plt.gcf())
+           Graph_Plotting()
             
             if "mapping_history" not in st.session_state:
                 st.session_state.mapping_history = []
@@ -110,6 +113,16 @@ elif mode == "plot":
             
         except Exception as e:
             st.error(f"Error: {str(e)}")
+
+    st.write("History")
+    if 'mapping_history' in st.session_state:
+        if st.session_state.mapping_history:
+            for item in reversed(st.session_state.mapping_history):
+                st.code(item)
+        else:
+            st.write("No history")
+    else:
+        st.write("No history")
 
     st.write("History")
     if 'mapping_history' in st.session_state:
