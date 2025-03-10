@@ -105,7 +105,7 @@ elif mode == "plot":
     
     if st.button("Plot"):
         try:
-           Graph_Plotting()
+            Graph_Plotting()
             if "mapping_history" not in st.session_state:
                 st.session_state.mapping_history = []
             st.session_state.mapping_history.append(expression)      
