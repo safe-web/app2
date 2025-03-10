@@ -100,8 +100,8 @@ elif mode == "plot":
     st.write("Please enter your expression")
     expression = st.text_input("Expression:")
     
-    x_min = st.number_input("Minimum：")
-    x_max = st.number_input("Maximum：")
+    x_min = st.number_input("Minimum：", value = -10)
+    x_max = st.number_input("Maximum：", value = 10)
     
     if st.button("Plot"):
         try:
@@ -112,16 +112,6 @@ elif mode == "plot":
             
         except Exception as e:
             st.error(f"Error: {str(e)}")
-
-    st.write("History")
-    if 'mapping_history' in st.session_state:
-        if st.session_state.mapping_history:
-            for item in reversed(st.session_state.mapping_history):
-                st.code(item)
-        else:
-            st.write("No history")
-    else:
-        st.write("No history")
 
     st.write("History")
     if 'mapping_history' in st.session_state:
