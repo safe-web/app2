@@ -34,25 +34,7 @@ if st.button("Logout"):
 
 mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
 
-def Graph_Plotting():
-        if x_min >= x_max:
-            raise ValueError("Maximum must be greater than Minimum")
-                
-        func_expr = sympify(expression)
-        x = np.linspace(x_min, x_max, 1000)
-
-        func = lambdify('x', func_expr, 'numpy')
-        y = func(x)
-
-        plt.figure(figsize=(10, 5))
-        plt.plot(x, y)
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title('Graph of {expression}')
-        plt.grid(True)
-        st.pyplot(plt.gcf())
-
-if mode == "calculate":
+def calculate_mode():
     st.write("Please enter your expression")
     st.write("@() for log(), ^ / ** for square, #() for sqrt(), pi = 3.14……, e = 2.718……")
     expression = st.text_input("Expression:")
@@ -69,7 +51,7 @@ if mode == "calculate":
                 expression = expression.replace('cos', 'math.cos')
                 expression = expression.replace('tan', 'math.tan')
 
-            expression = expression.replace("'", "/180*pi")
+            expression = expression.replace("'", "/180*math.pi")
             expression = expression.replace('pi', 'math.pi')
             expression = expression.replace('e', 'math.e')
             expression = expression.replace('log', 'math.log')
@@ -77,17 +59,15 @@ if mode == "calculate":
             expression = expression.replace('sqrt', 'math.sqrt')
             expression = expression.replace('#', 'math.sqrt')
             expression = expression.replace('^', '**')
-
             result = eval(expression)
             st.write("Result:", result)
-
             if "calculator_history" not in st.session_state:
                 st.session_state.calculator_history = []
             st.session_state.calculator_history.append((expression, result))
 
         except Exception as e:
             st.write("Error:", e)
-
+            
     if 'calculator_history' in st.session_state:
         if st.session_state.calculator_history:
             st.write("History:")
@@ -96,16 +76,31 @@ if mode == "calculate":
         else:
             st.write("No history.")
 
-elif mode == "plot":
+def plot_mode():
     st.write("Please enter your expression")
     expression = st.text_input("Expression:")
-    
-    x_min = st.number_input("Minimum：", value = -10)
-    x_max = st.number_input("Maximum：", value = 10)
+    x_min = st.number_input("Minimum：", value=-10)
+    x_max = st.number_input("Maximum：", value=10)
     
     if st.button("Plot"):
         try:
-            Graph_Plotting()
+            if x_min >= x_max:
+                raise ValueError("Maximum must be greater than Minimum")
+                    
+            func_expr = sympify(expression)
+            x = np.linspace(x_min, x_max, 1000)
+
+            func = lambdify('x', func_expr, 'numpy')
+            y = func(x)
+
+            plt.figure(figsize=(10, 5))
+            plt.plot(x, y)
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.title(f'Graph of {expression}')
+            plt.grid(True)
+            st.pyplot(plt.gcf())
+
             if "mapping_history" not in st.session_state:
                 st.session_state.mapping_history = []
             st.session_state.mapping_history.append(expression)      
@@ -123,7 +118,7 @@ elif mode == "plot":
     else:
         st.write("No history")
 
-elif mode == "solve equation":
+def equation_mode():
     st.write("Enter equation (e.g.: x^2 - 4 = 0)")
     equation_input = st.text_input("Equation:")
 
@@ -137,7 +132,7 @@ elif mode == "solve equation":
             st.write("Solutions:")
             for i, sol in enumerate(solutions):
                 st.write(f"x{i+1}: {sol}")
-
+                
             if "equation_history" not in st.session_state:
                 st.session_state.equation_history = []
             st.session_state.equation_history.append((equation_input, solutions))
@@ -156,3 +151,10 @@ elif mode == "solve equation":
             st.write("No history.")
     else:
         st.write("No history.")
+
+if mode == "calculate":
+    calculate_mode()
+elif mode == "plot":
+    plot_mode()
+elif mode == "solve equation":
+    equation_mode()
