@@ -75,6 +75,8 @@ def calculate_mode():
                 st.write(f"{expr} = {res}")
         else:
             st.write("No history.")
+    else:
+        st.write("No history.")
 
 def plot_mode():
     st.write("Please enter your expression")
