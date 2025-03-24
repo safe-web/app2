@@ -35,7 +35,7 @@ def main_app():
         st.session_state.logged_in = False
         st.rerun()
 
-    mode = st.radio("mode:", ("calculate", "plot", "solve equation","calculus"))
+    mode = st.radio("mode:", ("calculate", "plot", "solve equation","calculus","unit converter"))
 
     if mode == "calculate":
         calculate_mode()
@@ -45,6 +45,8 @@ def main_app():
         equation_mode()
     elif mode == "calculus":
         calculus_mode()
+    elif mode == "unit converter":
+        unit_converter()
         
 
 def calculate_mode():
@@ -209,6 +211,67 @@ def calculus_mode():
             op, expr, l, u, res = item
             st.latex(f"{op} {expr}" + (f" from {l} to {u}" if l or u else "") + f" = {latex(res)}")
 
+def unit_converter():
+    st.title("Unit Converter")
+    st.write("Convert between different units of measurement.")
+
+    # Select the type of conversion
+    conversion_type = st.selectbox(
+        "Select conversion type:",
+        ("Length", "Temperature")
+    )
+
+    if conversion_type == "Length":
+        st.write("### Length Conversion")
+        length_units = ["Meters", "Kilometers", "Centimeters", "Inches"]
+        from_unit = st.selectbox("From:", length_units)
+        to_unit = st.selectbox("To:", length_units)
+        value = st.number_input("Enter value:")
+
+        if st.button("Convert"):
+            # Convert to meters first
+            if from_unit == "Meters":
+                meters = value
+            elif from_unit == "Kilometers":
+                meters = value * 1000
+            elif from_unit == "Centimeters":
+                meters = value / 100
+            elif from_unit == "Inches":
+                meters = value * 0.0254
+
+            # Convert from meters to the target unit
+            if to_unit == "Meters":
+                result = meters
+            elif to_unit == "Kilometers":
+                result = meters / 1000
+            elif to_unit == "Centimeters":
+                result = meters * 100
+            elif to_unit == "Inches":
+                result = meters / 0.0254
+
+            st.write(f"Result: {result:.4f} {to_unit}")
+
+    elif conversion_type == "Temperature":
+        st.write("### Temperature Conversion")
+        temp_units = ["Celsius", "Fahrenheit"]
+        from_unit = st.selectbox("From:", temp_units)
+        to_unit = st.selectbox("To:", temp_units)
+        value = st.number_input("Enter value:")
+
+        if st.button("Convert"):
+            # Convert to Celsius first
+            if from_unit == "Celsius":
+                celsius = value
+            elif from_unit == "Fahrenheit":
+                celsius = (value - 32) * 5 / 9
+
+            # Convert from Celsius to the target unit
+            if to_unit == "Celsius":
+                result = celsius
+            elif to_unit == "Fahrenheit":
+                result = (celsius * 9 / 5) + 32
+
+            st.write(f"Result: {result:.4f} {to_unit}")
 
 
 if 'logged_in' not in st.session_state:
