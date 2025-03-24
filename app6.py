@@ -35,7 +35,7 @@ def main_app():
         st.session_state.logged_in = False
         st.rerun()
 
-    mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
+    mode = st.radio("mode:", ("calculate", "plot", "solve equation","calculus"))
 
     if mode == "calculate":
         calculate_mode()
@@ -43,6 +43,7 @@ def main_app():
         plot_mode()
     elif mode == "solve equation":
         equation_mode()
+    elif mode == "calculus":
 
 def calculate_mode():
     st.write("Please enter your expression")
@@ -164,15 +165,55 @@ def equation_mode():
     else:
         st.write("No history.")
 
-
-
-
-if __name__ == "__main__":
-    if 'logged_in' not in st.session_state:
-        st.session_state.logged_in = False
-
-    if not st.session_state.logged_in:
-        login()
+def calculus_mode():
+    st.write("Calculus Operations")
+    operation = st.radio("Operation:", ("Differentiate", "Integrate"))
+    expr_input = st.text_input("Enter expression (use 'x' as variable):")
     
-    if st.session_state.logged_in:
-        main_app()
+    if operation == "Integrate":
+        lower = st.text_input("Lower limit (leave empty for indefinite):")
+        upper = st.text_input("Upper limit (leave empty for indefinite):")
+
+    if st.button("Compute"):
+        try:
+            x = symbols('x')
+            expr = sympify(expr_input)
+            
+            if operation == "Differentiate":
+                result = diff(expr, x)
+                st.latex(fr"\frac{{d}}{{dx}}({latex(expr)}) = {latex(result)}")
+                
+            elif operation == "Integrate":
+                if lower or upper:
+                    result = integrate(expr, (x, sympify(lower) if lower else x, sympify(upper) if upper else x))
+                    limits = f"_{{{lower}}}^{{{upper}}}" if lower or upper else ""
+                else:
+                    result = integrate(expr, x)
+                    limits = ""
+                st.latex(fr"\int{limits} {latex(expr)}\,dx = {latex(result)}")
+
+            # Save to history
+            if "calculus_history" not in st.session_state:
+                st.session_state.calculus_history = []
+            st.session_state.calculus_history.append((operation, expr_input, lower, upper, result))
+
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
+
+    # Display history
+    if 'calculus_history' in st.session_state and st.session_state.calculus_history:
+        st.write("History:")
+        for item in reversed(st.session_state.calculus_history):
+            op, expr, l, u, res = item
+            st.latex(f"{op} {expr}" + (f" from {l} to {u}" if l or u else "") + f" = {latex(res)}")
+
+
+
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+
+if not st.session_state.logged_in:
+    login()
+    
+if st.session_state.logged_in:
+    main_app()
