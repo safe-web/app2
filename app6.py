@@ -2,7 +2,7 @@ import streamlit as st
 import math
 import matplotlib.pyplot as plt
 import numpy as np
-from sympy import sympify, lambdify, Eq, solve, symbols
+from sympy import sympify, lambdify, Eq, solve, symbols, diff, integrate, latex
 
 
 def login():
