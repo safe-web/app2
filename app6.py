@@ -44,6 +44,8 @@ def main_app():
     elif mode == "solve equation":
         equation_mode()
     elif mode == "calculus":
+        calculus_mode()
+        
 
 def calculate_mode():
     st.write("Please enter your expression")
