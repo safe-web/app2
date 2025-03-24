@@ -4,13 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sympy import sympify, lambdify, Eq, solve, symbols
 
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
 
-if not st.session_state.logged_in:
-    st.title("Login")
+def login():
+    st.title("Login: ")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+
     if st.button("Login"):
         if username == "admin" and password == "123":
             st.session_state.logged_in = True
@@ -24,15 +23,26 @@ if not st.session_state.logged_in:
             st.session_state.logged_in = True
         else:
             st.error("Invalid username or password")
-    st.stop()
+        
+        if st.session_state.logged_in:
+            st.rerun()
+    
+def main_app():
+    st.title("The math helper")
+    st.write("Jeremy - 24034 Tony-24326 Ben-24250 David-24077")
 
-st.title("The math helper")
-st.write("Jeremy - 24034 Tony-24326 Ben-24250 David-24077")
+    if st.button("Logout"):
+        st.session_state.logged_in = False
+        st.rerun()
 
-if st.button("Logout"):
-    st.session_state.logged_in = False
+    mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
 
-mode = st.radio("mode:", ("calculate", "plot", "solve equation"))
+    if mode == "calculate":
+        calculate_mode()
+    elif mode == "plot":
+        plot_mode()
+    elif mode == "solve equation":
+        equation_mode()
 
 def calculate_mode():
     st.write("Please enter your expression")
@@ -154,9 +164,15 @@ def equation_mode():
     else:
         st.write("No history.")
 
-if mode == "calculate":
-    calculate_mode()
-elif mode == "plot":
-    plot_mode()
-elif mode == "solve equation":
-    equation_mode()
+
+
+
+if __name__ == "__main__":
+    if 'logged_in' not in st.session_state:
+        st.session_state.logged_in = False
+
+    if not st.session_state.logged_in:
+        login()
+    
+    if st.session_state.logged_in:
+        main_app()
