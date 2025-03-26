@@ -169,10 +169,15 @@ def equation_mode():
     else:
         st.write("No history.")
 
+
 def calculus_mode():
     st.write("Calculus Operations")
     operation = st.radio("Operation:", ("Differentiate", "Integrate"))
     expr_input = st.text_input("Enter expression (use 'x' as variable):")
+    
+    # 初始化 lower 和 upper 为默认值
+    lower = ""
+    upper = ""
     
     if operation == "Integrate":
         lower = st.text_input("Lower limit (leave empty for indefinite):")
@@ -189,14 +194,17 @@ def calculus_mode():
                 
             elif operation == "Integrate":
                 if lower or upper:
-                    result = integrate(expr, (x, sympify(lower) if lower else x, sympify(upper) if upper else x))
-                    limits = f"_{{{lower}}}^{{{upper}}}" if lower or upper else ""
+                    # 处理空字符串的情况（视为不定积分）
+                    lower_val = sympify(lower) if lower.strip() else x
+                    upper_val = sympify(upper) if upper.strip() else x
+                    result = integrate(expr, (x, lower_val, upper_val))
+                    limits = f"_{{{lower}}}^{{{upper}}}" if (lower or upper) else ""
                 else:
                     result = integrate(expr, x)
                     limits = ""
                 st.latex(fr"\int{limits} {latex(expr)}\,dx = {latex(result)}")
 
-            # Save to history
+            # 保存历史记录（包含默认值）
             if "calculus_history" not in st.session_state:
                 st.session_state.calculus_history = []
             st.session_state.calculus_history.append((operation, expr_input, lower, upper, result))
@@ -204,12 +212,16 @@ def calculus_mode():
         except Exception as e:
             st.error(f"Error: {str(e)}")
 
-    # Display history
+    # 显示历史记录（适配不同操作）
     if 'calculus_history' in st.session_state and st.session_state.calculus_history:
         st.write("History:")
         for item in reversed(st.session_state.calculus_history):
             op, expr, l, u, res = item
-            st.latex(f"{op} {expr}" + (f" from {l} to {u}" if l or u else "") + f" = {latex(res)}")
+            if op == "Differentiate":
+                st.latex(fr"\frac{{d}}{{dx}}({latex(expr)}) = {latex(res)}")
+            elif op == "Integrate":
+                limits = f" from {l} to {u}" if (l or u) else ""
+                st.latex(fr"\int{limits} {latex(expr)}\,dx = {latex(res)}")
 
 def unit_converter():
     st.title("Unit Converter")
