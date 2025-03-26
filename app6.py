@@ -215,6 +215,10 @@ def unit_converter():
     st.title("Unit Converter")
     st.write("Convert between different units of measurement.")
 
+    # Initialize history in session state if it doesn't exist
+    if "conversion_history" not in st.session_state:
+        st.session_state.conversion_history = []
+
     # Select the type of conversion
     conversion_type = st.selectbox(
         "Select conversion type:",
@@ -249,7 +253,12 @@ def unit_converter():
             elif to_unit == "Inches":
                 result = meters / 0.0254
 
+            # Display the result
             st.write(f"Result: {result:.4f} {to_unit}")
+
+            # Save the conversion to history
+            conversion_entry = f"{value} {from_unit} = {result:.4f} {to_unit}"
+            st.session_state.conversion_history.append(conversion_entry)
 
     elif conversion_type == "Temperature":
         st.write("### Temperature Conversion")
@@ -271,8 +280,20 @@ def unit_converter():
             elif to_unit == "Fahrenheit":
                 result = (celsius * 9 / 5) + 32
 
+            # Display the result
             st.write(f"Result: {result:.4f} {to_unit}")
 
+            # Save the conversion to history
+            conversion_entry = f"{value} {from_unit} = {result:.4f} {to_unit}"
+            st.session_state.conversion_history.append(conversion_entry)
+
+    # Display conversion history
+    st.write("### Conversion History")
+    if st.session_state.conversion_history:
+        for entry in reversed(st.session_state.conversion_history):
+            st.write(entry)
+    else:
+        st.write("No conversion history yet.")
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
