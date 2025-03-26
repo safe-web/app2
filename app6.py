@@ -300,12 +300,12 @@ def unit_converter():
             st.session_state.conversion_history.append(conversion_entry)
 
     # Display conversion history
-    st.write("### Conversion History")
+    st.write("Conversion History")
     if st.session_state.conversion_history:
         for entry in reversed(st.session_state.conversion_history):
             st.write(entry)
     else:
-        st.write("No conversion history yet.")
+        st.write("No history.")
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
