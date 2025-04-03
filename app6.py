@@ -223,7 +223,69 @@ def calculus_mode():
                 limits = f" from {l} to {u}" if (l or u) else ""
                 st.latex(fr"\int{limits} {latex(expr)}\,dx = {latex(res)}")
 
+def celsius_conversion(x):
+    ABSOLUTE_ZERO_CELSIUS = -273.15  # Physical lower limit
+    if x < ABSOLUTE_ZERO_CELSIUS:
+        raise ValueError(f"Invalid input: {x}°C is below absolute zero ({ABSOLUTE_ZERO_CELSIUS}°C)")
+    return x  # No conversion needed (identity function)
 
+def fahrenheit_to_celsius(x):
+    ABSOLUTE_ZERO_FAHRENHEIT = -459.67  # Physical lower limit
+    if x < ABSOLUTE_ZERO_FAHRENHEIT:
+        raise ValueError(f"Invalid input: {x}°F is below absolute zero ({ABSOLUTE_ZERO_FAHRENHEIT}°F)")
+    return (x - 32) * 5/9
+def unit_converter(conversion_rates):
+    """Convert units and save history - simplified version"""
+    st.title("Unit Converter")
+    
+    # 1. Initialize history list if it is empty
+    if "history" not in st.session_state:
+        st.session_state.history = []
+    
+    # 2. Get user input 
+    category = st.selectbox("Choose type:", list(conversion_rates.keys()))
+    units = list(conversion_rates[category].keys())
+    
+    from_unit = st.selectbox("From:", units)
+    to_unit = st.selectbox("To:", units)
+    value = st.number_input("Value:")
+    
+    if st.button("Convert"):
+        # 3. Perform conversion 
+        if category == "Length":
+            # Convert to meters first
+            meters = value * conversion_rates["Length"][from_unit]
+            result = meters / conversion_rates["Length"][to_unit]
+        else:  # Temperature
+            celsius = conversion_rates["Temperature"][from_unit](value)
+            result = celsius if to_unit == "Celsius" else (celsius * 9/5) + 32
+        
+        # 4. Show result 
+        st.success(f"Result: {result:.2f} {to_unit}")
+        
+        # Save to history array
+        st.session_state.history.append(f"{value} {from_unit} → {result:.2f} {to_unit}")
+    
+    # 5. Show history 
+    st.write("## History")
+    for conversion in reversed(st.session_state.history):
+        st.write(conversion)
+
+# Define conversion rates 
+RATES = {
+    "Length": {
+        "Meters": 1,
+        "Centimeters": 0.01,
+        "Inches": 0.0254
+    },
+    "Temperature": {
+        "Celsius": celsius_conversion,
+        "Fahrenheit": fahrenheit_to_celsius
+    }
+}
+
+# Call the function 
+unit_converter(RATES)
 
 
 if 'logged_in' not in st.session_state:
