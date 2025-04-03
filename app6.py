@@ -223,70 +223,89 @@ def calculus_mode():
                 limits = f" from {l} to {u}" if (l or u) else ""
                 st.latex(fr"\int{limits} {latex(expr)}\,dx = {latex(res)}")
 
-def celsius_conversion(x):
-    ABSOLUTE_ZERO_CELSIUS = -273.15  # Physical lower limit
-    if x < ABSOLUTE_ZERO_CELSIUS:
-        raise ValueError(f"Invalid input: {x}°C is below absolute zero ({ABSOLUTE_ZERO_CELSIUS}°C)")
-    return x  # No conversion needed (identity function)
-
-def fahrenheit_to_celsius(x):
-    ABSOLUTE_ZERO_FAHRENHEIT = -459.67  # Physical lower limit
-    if x < ABSOLUTE_ZERO_FAHRENHEIT:
-        raise ValueError(f"Invalid input: {x}°F is below absolute zero ({ABSOLUTE_ZERO_FAHRENHEIT}°F)")
-    return (x - 32) * 5/9
-def unit_converter(conversion_rates):
-    """Convert units and save history - simplified version"""
+def unit_converter():
     st.title("Unit Converter")
-    
-    # 1. Initialize history list if it is empty
-    if "history" not in st.session_state:
-        st.session_state.history = []
-    
-    # 2. Get user input 
-    category = st.selectbox("Choose type:", list(conversion_rates.keys()))
-    units = list(conversion_rates[category].keys())
-    
-    from_unit = st.selectbox("From:", units)
-    to_unit = st.selectbox("To:", units)
-    value = st.number_input("Value:")
-    
-    if st.button("Convert"):
-        # 3. Perform conversion 
-        if category == "Length":
+    st.write("Convert between different units of measurement.")
+
+    # Initialize history in session state if it doesn't exist
+    if "conversion_history" not in st.session_state:
+        st.session_state.conversion_history = []
+
+    # Select the type of conversion
+    conversion_type = st.selectbox(
+        "Select conversion type:",
+        ("Length", "Temperature")
+    )
+
+    if conversion_type == "Length":
+        st.write("### Length Conversion")
+        length_units = ["Meters", "Kilometers", "Centimeters", "Inches"]
+        from_unit = st.selectbox("From:", length_units)
+        to_unit = st.selectbox("To:", length_units)
+        value = st.number_input("Enter value:")
+
+        if st.button("Convert"):
             # Convert to meters first
-            meters = value * conversion_rates["Length"][from_unit]
-            result = meters / conversion_rates["Length"][to_unit]
-        else:  # Temperature
-            celsius = conversion_rates["Temperature"][from_unit](value)
-            result = celsius if to_unit == "Celsius" else (celsius * 9/5) + 32
-        
-        # 4. Show result 
-        st.success(f"Result: {result:.2f} {to_unit}")
-        
-        # Save to history array
-        st.session_state.history.append(f"{value} {from_unit} → {result:.2f} {to_unit}")
-    
-    # 5. Show history 
-    st.write("## History")
-    for conversion in reversed(st.session_state.history):
-        st.write(conversion)
+            if from_unit == "Meters":
+                meters = value
+            elif from_unit == "Kilometers":
+                meters = value * 1000
+            elif from_unit == "Centimeters":
+                meters = value / 100
+            elif from_unit == "Inches":
+                meters = value * 0.0254
 
-# Define conversion rates 
-RATES = {
-    "Length": {
-        "Meters": 1,
-        "Centimeters": 0.01,
-        "Inches": 0.0254
-    },
-    "Temperature": {
-        "Celsius": celsius_conversion,
-        "Fahrenheit": fahrenheit_to_celsius
-    }
-}
+            # Convert from meters to the target unit
+            if to_unit == "Meters":
+                result = meters
+            elif to_unit == "Kilometers":
+                result = meters / 1000
+            elif to_unit == "Centimeters":
+                result = meters * 100
+            elif to_unit == "Inches":
+                result = meters / 0.0254
 
-# Call the function 
-unit_converter(RATES)
+            # Display the result
+            st.write(f"Result: {result:.4f} {to_unit}")
 
+            # Save the conversion to history
+            conversion_entry = f"{value} {from_unit} = {result:.4f} {to_unit}"
+            st.session_state.conversion_history.append(conversion_entry)
+
+    elif conversion_type == "Temperature":
+        st.write("### Temperature Conversion")
+        temp_units = ["Celsius", "Fahrenheit"]
+        from_unit = st.selectbox("From:", temp_units)
+        to_unit = st.selectbox("To:", temp_units)
+        value = st.number_input("Enter value:")
+
+        if st.button("Convert"):
+            # Convert to Celsius first
+            if from_unit == "Celsius":
+                celsius = value
+            elif from_unit == "Fahrenheit":
+                celsius = (value - 32) * 5 / 9
+
+            # Convert from Celsius to the target unit
+            if to_unit == "Celsius":
+                result = celsius
+            elif to_unit == "Fahrenheit":
+                result = (celsius * 9 / 5) + 32
+
+            # Display the result
+            st.write(f"Result: {result:.4f} {to_unit}")
+
+            # Save the conversion to history
+            conversion_entry = f"{value} {from_unit} = {result:.4f} {to_unit}"
+            st.session_state.conversion_history.append(conversion_entry)
+
+    # Display conversion history
+    st.write("### Conversion History")
+    if st.session_state.conversion_history:
+        for entry in reversed(st.session_state.conversion_history):
+            st.write(entry)
+    else:
+        st.write("No conversion history yet.")
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
